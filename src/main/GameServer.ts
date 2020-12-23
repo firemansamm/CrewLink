@@ -2,14 +2,11 @@ import dgram, { RemoteInfo, Socket } from 'dgram';
 import { parsePacket, composePacket, PayloadID, Code2Int, PlayerClient } from 'amongus-protocol/js';
 import GameStateProcessor from './GameStateProcessor';
 
-//import type { Packet, Payload } from 'amongus-protocol/ts/lib/interfaces/Packets';
-
-type Packet = any;
-type Payload = any;
+import type { Packet, Payload } from 'amongus-protocol/ts/lib/interfaces/Packets';
 
 const BROADCAST_INTERVAL_MSEC = 500;
 const LOCAL_GAME_CODE = 32;
-const DEBUG = false;
+//const DEBUG = false;
 const LC = Buffer.alloc(4);
 LC.writeInt32LE(LOCAL_GAME_CODE, 0);
 
