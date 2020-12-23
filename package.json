@@ -1,6 +1,6 @@
 {
   "name": "crewlink",
-  "version": "1.1.6",
+  "version": "1.1.6-mod",
   "license": "GPL-3.0-or-later",
   "description": "Free, open, Among Us proximity voice chat",
   "funding": {
@@ -17,9 +17,9 @@
     "lint": "eslint src",
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
-    "dist": "yarn compile && electron-builder --win --x64 --prepackaged out/",
-    "dist-mac": "yarn compile && electron-builder --mac --x64 --prepackaged out/",
-    "dist-linux": "yarn compile && electron-builder --linux --x64 --prepackaged out/",
+    "dist": "yarn compile && electron-builder --win --x64",
+    "dist-mac": "yarn compile && electron-builder --mac --x64",
+    "dist-linux": "yarn compile && electron-builder --linux --x64",
     "dist-all": "yarn compile && electron-builder -mwl"
   },
   "dependencies": {
