@@ -25,14 +25,17 @@
     "publish": "yarn compile && electron-builder --win --x64 --publish always"
   },
   "dependencies": {
+    "@babel/preset-env": "^7.12.11",
     "ajv": "^6.12.6",
+    "amongus-protocol": "^1.2.6",
     "analyser-frequency-average": "^1.0.0",
     "axios": "^0.21.0",
+    "babel-preset-es2015": "^6.24.1",
     "cross-spawn": "^7.0.3",
     "electron-store": "^6.0.1",
     "electron-updater": "^4.3.5",
     "electron-window-state": "^5.0.3",
-    "iohook": "git://github.com/ykhwong/iohook",
+    "iohook": "^0.7.2",
     "jsondiffpatch": "^0.4.1",
     "memoryjs": "git://github.com/Rob--/memoryjs",
     "react": "^17.0.1",
@@ -68,5 +71,19 @@
     "ts-interface-builder": "^0.2.2",
     "typescript": "^4.0.3",
     "webpack": "~4.42.1"
+  },
+  "iohook": {
+    "targets": [
+      "node-88",
+      "electron-80"
+    ],
+    "platforms": [
+      "win32",
+      "darwin"
+    ],
+    "arches": [
+      "x64",
+      "ia32"
+    ]
   }
 }

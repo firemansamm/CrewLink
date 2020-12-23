@@ -370,6 +370,7 @@ const Voice: React.FC = function () {
 	// Emit player id to socket
 	useEffect(() => {
 		if (connectionStuff.current.socket && myPlayer && myPlayer.id !== undefined) {
+			console.log('emit my id!', myPlayer.id);
 			connectionStuff.current.socket.emit('id', myPlayer.id);
 		}
 	}, [myPlayer?.id]);

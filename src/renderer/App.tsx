@@ -1,4 +1,5 @@
 import React, { useEffect, useReducer, useState } from 'react';
+import { ImpulseSpinner as Spinner } from 'react-spinners-kit';
 import ReactDOM from 'react-dom';
 import Voice from './Voice';
 import Menu from './Menu';
@@ -14,7 +15,7 @@ if (typeof window !== 'undefined' && window.location) {
 }
 
 
-enum AppState { MENU, VOICE }
+enum AppState { MENU, VOICE, WAITING }
 
 function App() {
 	const [state, setState] = useState<AppState>(AppState.MENU);
@@ -38,8 +39,10 @@ function App() {
 	});
 
 	useEffect(() => {
-		const onOpen = (_: Electron.IpcRendererEvent, isOpen: boolean) => {
-			setState(isOpen ? AppState.VOICE : AppState.MENU);
+		const onOpen = (_: Electron.IpcRendererEvent, state: number) => {
+			if (state == 0) setState(AppState.MENU);
+			else if (state == 1) setState(AppState.WAITING);
+			else if (state == 2) setState(AppState.VOICE);
 		};
 		const onState = (_: Electron.IpcRendererEvent, newState: AmongUsState) => {
 			setGameState(newState);
@@ -69,6 +72,14 @@ function App() {
 	switch (state) {
 	case AppState.MENU:
 		page = <Menu errored={errored} />;
+		break;
+	case AppState.WAITING:
+		page = <><div className="root">
+			<div className="menu">
+				<span className="waiting">Waiting for game...</span>
+				<Spinner frontColor="#9b59b6" backColor="#2C2F33" size={80} loading />
+			</div>
+		</div></>;
 		break;
 	case AppState.VOICE:
 		page = <Voice />;

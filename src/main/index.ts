@@ -18,16 +18,16 @@ function createMainWindow() {
 	const mainWindowState = windowStateKeeper({});
 
 	const window = new BrowserWindow({
-		width: 250,
-		height: 350,
-		maxWidth: 250,
+		width: 500,
+		height: 500,
+		maxWidth: 1000,
 		minWidth: 250,
-		maxHeight: 350,
+		maxHeight: 1000,
 		minHeight: 350,
 		x: mainWindowState.x,
 		y: mainWindowState.y,
 
-		resizable: false,
+		resizable: true,
 		frame: false,
 		fullscreenable: false,
 		maximizable: false,

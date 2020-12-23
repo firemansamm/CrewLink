@@ -1,6 +1,10 @@
 {
-	"extends": "./node_modules/electron-webpack/tsconfig-base.json",
+	"rules": {},
 	"compilerOptions": {
-		"jsx": "react"
+		"jsx": "react",
+		"checkJs": false,
+		"skipLibCheck": true,
+		"downlevelIteration": true,
+		"esModuleInterop": true,
 	}
 }

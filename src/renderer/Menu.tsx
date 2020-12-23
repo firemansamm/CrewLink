@@ -1,41 +1,42 @@
-import React from 'react';
-import { ImpulseSpinner as Spinner } from 'react-spinners-kit';
+import React, { useCallback, useState } from 'react';
 import { ipcRenderer } from 'electron';
 import './css/menu.css';
-import Footer from './Footer';
+import os from 'os';
 
 export interface MenuProps {
 	errored: boolean
 }
 
-const Menu: React.FC<MenuProps> = function ({ errored }: MenuProps) {
+const Menu: React.FC<MenuProps> = function () {
+	const [gameCode, setGameCode] = useState('');
+	const [gameRegion, setGameRegion] = useState('AS');
+	const [boundIP, setBoundIP] = useState('0.0.0.0');
+	const textChangeCallback = useCallback((e) => {
+		setGameCode(e.target.value);
+	}, [gameCode]);
+	const regionChangeCallback = useCallback((e) => {
+		setGameRegion(e.target.value);
+	}, [gameRegion]);
+	const boundIPChangeCallback = useCallback((e) => {
+		setBoundIP(e.target.value);
+	}, [boundIP]);
+	const ipList = Object.values(os.networkInterfaces()).map(x => x.map(y => y.address)).flat(2).filter(x => x.indexOf(':') === -1);
 	return (
 		<div className="root">
 			<div className="menu">
-				{errored ?
-					<>
-						<span className="waiting">Error</span>
-						<span className="errormessage">
-							<ol>
-								<li>Use a different Voice Server in settings</li>
-								<li>Update Among Us</li>
-								<li>Wait for 24 hours after Among Us updates</li>
-							</ol>
-						</span>
-						<button className="button" onClick={() => {
-							ipcRenderer.send('relaunch');
-						}}>Relaunch App</button>
-					</>
-					:
-					<>
-						<span className="waiting">Waiting for Among Us</span>
-						<Spinner frontColor="#9b59b6" backColor="#2C2F33" size={80} loading />
-						<button className="button" onClick={() => {
-							ipcRenderer.send('openGame');
-						}}>Open Game</button>
-					</>
-				}
-				<Footer />
+				<span className="waiting">Enter Game Code</span>
+				<input type='text' onChange={textChangeCallback} value={gameCode}></input>
+				<select onChange={regionChangeCallback} value={gameRegion}>
+					<option value='AS'>Asia</option>
+					<option value='EU'>Europe</option>
+					<option value='NA'>North America</option>
+				</select>
+				<button className="button" onClick={() => {
+					ipcRenderer.send('enterCode', gameCode, gameRegion, boundIP);
+				}}>Connect</button>
+				<select onChange={boundIPChangeCallback} value={boundIP}>
+					{ ipList.map((x, i) => <option value={x} key={i}>{x}</option>) }
+				</select>
 			</div>
 		</div>
 	);
