@@ -20,6 +20,7 @@ cache:
     - $HOME/.cache/electron-builder
 
 script:
+  - mkdir out
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]; then
       npm run dist-linux
@@ -28,7 +29,6 @@ script:
     fi
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
-  - mkdir out
 
 secure: "aKnJ+t8laK5/a5F0HAS7KzQO66D065sl51Lu8fafVhdgc3ArsGg65Igp576TLwoPprVGssr4aBeJkSTX8ZCRG91fNwVng1PE9wCG3CXng/dYhf5N7ZtfyzhBKef2tEq+nw+lfyums/p7QODsfwGQM2RfLN3op/E3c3HgOhG0hNo="
 
