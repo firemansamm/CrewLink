@@ -17,9 +17,9 @@
     "lint": "eslint src",
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
-    "dist": "yarn compile && electron-builder --win --x64",
-    "dist-mac": "yarn compile && electron-builder --mac --x64",
-    "dist-linux": "yarn compile && electron-builder --linux --x64",
+    "dist": "yarn compile && electron-builder --win --x64 --publish=always",
+    "dist-mac": "yarn compile && electron-builder --mac --x64 --publish=always",
+    "dist-linux": "yarn compile && electron-builder --linux --x64 --publish=always",
     "dist-all": "yarn compile && electron-builder -mwl"
   },
   "dependencies": {
@@ -81,5 +81,12 @@
       "x64",
       "ia32"
     ]
-  }
+  },
+  "publish": [
+    {
+      "provider": "github",
+      "owner": "firemansamm",
+      "repo": "CrewLink"
+    }
+  ]
 }
