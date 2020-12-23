@@ -7,6 +7,7 @@ matrix:
       env:
         - ELECTRON_CACHE=$HOME/.cache/electron
         - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - TSC_COMPILE_ON_ERROR=true
 
     - os: linux
       language: node_js
@@ -27,3 +28,13 @@ script:
     fi
 before_cache:
   - rm -rf $HOME/.cache/electron-builder/wine
+
+secure: "aKnJ+t8laK5/a5F0HAS7KzQO66D065sl51Lu8fafVhdgc3ArsGg65Igp576TLwoPprVGssr4aBeJkSTX8ZCRG91fNwVng1PE9wCG3CXng/dYhf5N7ZtfyzhBKef2tEq+nw+lfyums/p7QODsfwGQM2RfLN3op/E3c3HgOhG0hNo="
+
+deploy:
+  provider: releases
+  api_key: "$GITHUB_TOKEN"
+  file: "out/*"
+  skip_cleanup: true
+  on:
+    tags: true
