@@ -26,7 +26,6 @@ script:
   - |
     if [ "$TRAVIS_OS_NAME" == "linux" ]; then
       npm run dist-linux
-      npm run dist
     else
       npm run dist-mac
     fi
