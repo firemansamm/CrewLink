@@ -2,7 +2,6 @@ import patcher from '../patcher';
 import { GameState, AmongUsState } from '../common/AmongUsState';
 import { MasterServers } from 'amongus-protocol/js';
 import ProxyServer from './GameServer';
-import { isNullOrUndefined } from 'util';
 
 
 export default class GameReader {

@@ -1,10 +1,11 @@
 import dgram, { RemoteInfo, Socket } from 'dgram';
 import { parsePacket, composePacket, PayloadID, Code2Int, PlayerClient } from 'amongus-protocol/js';
-import { inspect } from 'util';
 import GameStateProcessor from './GameStateProcessor';
 
-import type { Packet, Payload } from 'amongus-protocol/ts/lib/interfaces/Packets';
+//import type { Packet, Payload } from 'amongus-protocol/ts/lib/interfaces/Packets';
 
+type Packet = any;
+type Payload = any;
 
 const BROADCAST_INTERVAL_MSEC = 500;
 const LOCAL_GAME_CODE = 32;
@@ -49,7 +50,7 @@ class GameProxy {
         //if (DEBUG) console.log(this.destinationServer, this.destinationPort);
     }
 
-    hasPayload(packet: Packet, type: PayloadID): boolean {
+    hasPayload(packet: any, type: PayloadID): boolean {
         return ('payloads' in packet && packet.payloads.filter(x => x.payloadid == type).length != 0);
     }
 

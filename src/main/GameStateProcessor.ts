@@ -2,7 +2,8 @@ import { Game, PacketID, PayloadID, GameObject, RPCID, MessageID, SpawnID, Alter
 const {ShipStatus, MeetingHub, LobbyBehaviour, GameData, Player, HeadQuarters, PlanetMap, AprilShipStatus} = GameObject;
 const {PlayerVoteAreaFlags} = Packets;
 
-import type {Packet} from 'amongus-protocol/ts/lib/interfaces/Packets';
+//import type {Packet} from 'amongus-protocol/ts/lib/interfaces/Packets';
+type Packet = any; // damn it
 
 // we ripped this from the other repo, so that we can keep track of the game state meaningfully 
 // as part of our MITM.
