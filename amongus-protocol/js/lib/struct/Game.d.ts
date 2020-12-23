@@ -66,7 +66,7 @@ export declare class Game extends GameObject {
     get age(): number;
     get impostors(): PlayerClient[];
     addChild(object: GameObject): void;
-    awaitSpawns(): Promise<import("amongus-protocol/ts/objects").Player[]>;
+    awaitSpawns(): Promise<import("./objects/Player.js").Player[]>;
     get GameData(): GameData;
     get MeetingHub(): MeetingHub;
     _syncSettings(options: GameOptionsData): void;

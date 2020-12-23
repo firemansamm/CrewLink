@@ -35,8 +35,8 @@ for (let i = 0; i < 256; ++i) {
 }
 export function getFloat16(val) {
     const float = Buffer.alloc(4);
-    float.writeFloatBE(val);
-    const int32 = float.readUInt32BE();
+    float.writeFloatBE(val, 0);
+    const int32 = float.readUInt32BE(0);
     return basetable[(int32 >> 23) & 0x1ff] + ((int32 & 0x007fffff) >> shifttable[(int32 >> 23) & 0x1ff]);
 }
 const mantissatable = new Array(2028);
@@ -74,6 +74,6 @@ for (let i = 33; i < 63; i++) {
 }
 export function getFloat32(val) {
     const int32 = Buffer.alloc(4);
-    int32.writeUInt32BE(mantissatable[offsettable[val >> 10] + (val & 0x3ff)] + exponenttable[val >> 10]);
-    return int32.readFloatBE();
+    int32.writeUInt32BE(mantissatable[offsettable[val >> 10] + (val & 0x3ff)] + exponenttable[val >> 10], 0);
+    return int32.readFloatBE(0);
 }

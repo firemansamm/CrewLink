@@ -29,7 +29,7 @@ export declare class PlayerClient extends GameObject {
     get isImposter(): boolean;
     get isImpostor(): boolean;
     get Player(): Player;
-    get PlayerData(): import("amongus-protocol/ts/lib/interfaces/Packets").ParsedPlayerGameData;
+    get PlayerData(): import("../interfaces/Packets.js").ParsedPlayerGameData;
     get name(): string;
     kick(ban?: boolean): Promise<void>;
     ban(): Promise<void>;
