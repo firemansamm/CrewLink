@@ -3,10 +3,6 @@
   "version": "1.1.6",
   "license": "GPL-3.0-or-later",
   "description": "Free, open, Among Us proximity voice chat",
-  "repository": {
-    "type": "git",
-    "url": "https://github.com/ottomated/crewlink.git"
-  },
   "funding": {
     "type": "individual",
     "url": "https://paypal.me/ottomated"
@@ -21,8 +17,10 @@
     "lint": "eslint src",
     "dev": "electron-webpack dev",
     "compile": "electron-webpack",
-    "dist": "yarn compile && electron-builder --win --x64",
-    "publish": "yarn compile && electron-builder --win --x64 --publish always"
+    "dist": "yarn compile && electron-builder --win --x64 --prepackaged out/",
+    "dist-mac": "yarn compile && electron-builder --mac --x64 --prepackaged out/",
+    "dist-linux": "yarn compile && electron-builder --linux --x64 --prepackaged out/",
+    "dist-all": "yarn compile && electron-builder -mwl"
   },
   "dependencies": {
     "@babel/preset-env": "^7.12.11",
@@ -37,7 +35,6 @@
     "electron-window-state": "^5.0.3",
     "iohook": "^0.7.2",
     "jsondiffpatch": "^0.4.1",
-    "memoryjs": "git://github.com/Rob--/memoryjs",
     "react": "^17.0.1",
     "react-dom": "^17.0.1",
     "react-spinners-kit": "^1.9.1",
