@@ -27,12 +27,7 @@ export default class GameReader {
 		if (gameState.meeting) state = GameState.DISCUSSION;
 		const players = gameState.players;
 
-		// yikes, we should coalesce all the forEaches into one spot - this much iteration is really bad for latency
-		players.forEach(x => {
-			x.inVent = (gameState.vents.has(x.id) && gameState.vents.get(x.id)) ?? false;
-		});
 		// const impostors = players.filter(x => x.isImpostor).length, crewmates = gameState.players.length - impostors;
-
 		const newState = {
 			lobbyCode: this.gameCode,
 			players,
