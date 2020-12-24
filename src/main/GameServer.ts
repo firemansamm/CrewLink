@@ -31,6 +31,7 @@ class GameProxy {
     gameCode = 0;
     socket: Socket;
     _bs: Buffer = Buffer.alloc(4);
+    playerids: number[] = [];
 
 
     constructor(source: RemoteInfo, code: string, server: [string, number]) {
@@ -55,7 +56,7 @@ class GameProxy {
         if ((idx = message.indexOf(this._bs)) !== -1) message.writeInt32LE(LOCAL_GAME_CODE, idx);
 
         const recp = parsePacket(message, 'client');
-    
+        
         if (!('payloads' in recp)) {
             this.socket.send(message, this.source.port, this.source.address);
             this.gameState.processPacket(recp);
@@ -64,7 +65,21 @@ class GameProxy {
             this.socket.send(message, this.source.port, this.source.address);
             const joined = recp.payloads.filter((x: Payload) => x.payloadid == PayloadID.JoinedGame)[0];
             // @ts-ignore too lazy to deal with this
+            this.playerids = joined.clients;    
+            // @ts-ignore too lazy to deal with this
             this.clientid = joined.clientid;
+            this.gameState.processPacket(recp);
+        } else if (recp.payloads.filter(x => x.payloadid == PayloadID.JoinGame).length != 0) {
+            this.socket.send(message, this.source.port, this.source.address);
+            const join = recp.payloads.filter((x: Payload) => x.payloadid == PayloadID.JoinGame)[0];
+            // @ts-ignore too lazy to deal with this
+            this.playerids.push(join.clientid);
+            this.gameState.processPacket(recp);
+        } else if (recp.payloads.filter(x => x.payloadid == PayloadID.RemovePlayer).length != 0) {
+            this.socket.send(message, this.source.port, this.source.address);
+            const remove = recp.payloads.filter((x: Payload) => x.payloadid == PayloadID.RemovePlayer)[0];
+            // @ts-ignore too lazy to deal with this
+            this.playerids.splice(this.playerids.indexOf(remove.clientid), 1);
             this.gameState.processPacket(recp);
         } else if (recp.payloads.filter(x => x.payloadid == PayloadID.Redirect).length != 0
                 && this.cachedHello &&  this.cachedJoin) {
@@ -93,7 +108,7 @@ class GameProxy {
                 const {x, y} = z.Player.CustomNetworkTransform.position;
                 return {
                     ptr: 0,
-                    id: z.id, // this is wrong - it's supposed to be the index of the player..?
+                    id: this.playerids.indexOf(z.id), // this is wrong - it's supposed to be the index of the player..?
                     name: z.name ?? '???', 
                     colorId: z.PlayerData?.color ?? 0,
                     hatId: z.PlayerData?.hat ?? 0,
@@ -108,12 +123,11 @@ class GameProxy {
                     isLocal: z.id == this.clientid,
                     x, y
                 };
-            }).filter(x => x != null).sort((x, y) => x.id <  y.id ? -1 : 1),
+            }).filter(x => x != null),
             vents: this.gameState.vented,
             localclientid: this.clientid,
             meeting: this.gameState.game?.MeetingHub?.MeetingHud != null
         };
-        v.players.forEach((x, i) => {x.id = i;});
         if (v.players.find(x => x.isLocal) == null) return null; //UGLY
         else return v;
     }
