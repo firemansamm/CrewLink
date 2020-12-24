@@ -31,7 +31,6 @@ class GameProxy {
     gameCode = 0;
     socket: Socket;
     _bs: Buffer = Buffer.alloc(4);
-    playerids: number[] = [];
 
 
     constructor(source: RemoteInfo, code: string, server: [string, number]) {
@@ -70,18 +69,6 @@ class GameProxy {
             this.clientid = joined.clientid;
             this.playerids.push(this.clientid);
             this.gameState.processPacket(recp);
-        } else if (recp.payloads.filter(x => x.payloadid == PayloadID.JoinGame).length != 0) {
-            this.socket.send(message, this.source.port, this.source.address);
-            const join = recp.payloads.filter((x: Payload) => x.payloadid == PayloadID.JoinGame)[0];
-            // @ts-ignore too lazy to deal with this
-            this.playerids.push(join.clientid);
-            this.gameState.processPacket(recp);
-        } else if (recp.payloads.filter(x => x.payloadid == PayloadID.RemovePlayer).length != 0) {
-            this.socket.send(message, this.source.port, this.source.address);
-            const remove = recp.payloads.filter((x: Payload) => x.payloadid == PayloadID.RemovePlayer)[0];
-            // @ts-ignore too lazy to deal with this
-            this.playerids.splice(this.playerids.indexOf(remove.clientid), 1);
-            this.gameState.processPacket(recp);
         } else if (recp.payloads.filter(x => x.payloadid == PayloadID.Redirect).length != 0
                 && this.cachedHello &&  this.cachedJoin) {
             const join = recp.payloads.filter((x: Payload) => x.payloadid == PayloadID.Redirect)[0];
@@ -109,7 +96,7 @@ class GameProxy {
                 const {x, y} = z.Player.CustomNetworkTransform.position;
                 return {
                     ptr: 0,
-                    id: this.playerids.indexOf(z.id), // this is wrong - it's supposed to be the index of the player..?
+                    id: z.Player.PlayerControl.playerId,
                     name: z.name ?? '???', 
                     colorId: z.PlayerData?.color ?? 0,
                     hatId: z.PlayerData?.hat ?? 0,
