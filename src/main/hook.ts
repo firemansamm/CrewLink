@@ -43,9 +43,8 @@ ipcMain.on('start', async (event) => {
 		gameReader = new GameReader(evt.reply as (evt: string, ...args: unknown[]) => void, code, region, boundIP);
 		const frame = () => {
 			gameReader.loop();
-			setTimeout(frame, 1000 / 10);
 		};
-		frame();
+		setInterval(frame, 100);
 	});
 
 	ipcMain.on('initState', (event: Electron.IpcMainEvent) => {

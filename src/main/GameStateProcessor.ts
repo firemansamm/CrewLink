@@ -57,7 +57,7 @@ export default class GameStateProcessor {
                                 this.clientid = payload.clientid;
                             }
                             break;
-                        case PayloadID.KickPlayer:
+                        /*case PayloadID.KickPlayer:
                             if (payload.bound === 'client') {
                                 const client = this.game?.clients.get(payload.clientid);
 
@@ -65,7 +65,7 @@ export default class GameStateProcessor {
                                     client.emit('kicked', payload.banned);
                                 }
                             }
-                            break;
+                            break;*/
                         case PayloadID.GameData:
                         case PayloadID.GameDataTo:
                             for (let i = 0; i < payload.parts.length; i++) {
@@ -81,11 +81,11 @@ export default class GameStateProcessor {
                                         break;
                                     case MessageID.RPC:
                                         switch (part.rpcid) {
-                                            case RPCID.CompleteTask:
+                                            /*case RPCID.CompleteTask:
                                                 break;
                                             case RPCID.SyncSettings:
                                                 this.game?._syncSettings(part.options);
-                                                break
+                                                break*/
                                             case RPCID.SetInfected:
                                                 this.game?._setImposters(part.infected);
                                                 break;
@@ -103,7 +103,7 @@ export default class GameStateProcessor {
                                                 }
                                                 break;
                                             }
-                                            case RPCID.SendChat: {
+                                            /*case RPCID.SendChat: {
                                                 const client = this.game?.getClientByComponent(part.handlerid);
 
                                                 if (client) {
@@ -111,7 +111,7 @@ export default class GameStateProcessor {
                                                     client.emit('chat', part.text);
                                                 }
                                                 break;
-                                            }
+                                            }*/
                                             case RPCID.StartMeeting:
                                                 this.vented.clear();
                                                 if (part.targetid === 0xFF) {
@@ -121,7 +121,7 @@ export default class GameStateProcessor {
                                                     this.game?.emit('meeting', false, target);
                                                 }
                                                 break;
-                                            case RPCID.SetStartCounter:
+                                            /*case RPCID.SetStartCounter:
                                                 if (!this.game) return;
                                                 if (this.game.startCounterSeq === null || part.sequence > this.game.startCounterSeq) {
                                                     this.game.startCount = part.time;
@@ -160,7 +160,7 @@ export default class GameStateProcessor {
                                                 if (client) {
                                                     client._setTasks(part.tasks);
                                                 }
-                                                break;
+                                                break;*/
                                             case RPCID.UpdateGameData:
                                                 if (!this.game) return;
                                                 await this.game.awaitChild(SpawnID.GameData);
@@ -243,8 +243,6 @@ export default class GameStateProcessor {
                     }
                     break;
                 }
-                break;
-            case PacketID.Acknowledge:
                 break;
         }
     }
