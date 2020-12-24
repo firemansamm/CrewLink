@@ -65,9 +65,10 @@ class GameProxy {
             this.socket.send(message, this.source.port, this.source.address);
             const joined = recp.payloads.filter((x: Payload) => x.payloadid == PayloadID.JoinedGame)[0];
             // @ts-ignore too lazy to deal with this
-            this.playerids = joined.clients;    
+            this.playerids = joined.clients;
             // @ts-ignore too lazy to deal with this
             this.clientid = joined.clientid;
+            this.playerids.push(this.clientid);
             this.gameState.processPacket(recp);
         } else if (recp.payloads.filter(x => x.payloadid == PayloadID.JoinGame).length != 0) {
             this.socket.send(message, this.source.port, this.source.address);
