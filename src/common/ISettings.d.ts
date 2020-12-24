@@ -1,3 +1,4 @@
+
 export interface ISettings {
 	alwaysOnTop: boolean;
 	microphone: string;
@@ -6,12 +7,10 @@ export interface ISettings {
 	serverURL: string;
 	pushToTalkShortcut: string;
 	deafenShortcut: string;
-	muteShortcut: string;
+	offsets: {
+		version: string;
+		data: string;
+	},
 	hideCode: boolean;
 	enableSpatialAudio: boolean;
-	localLobbySettings: ILobbySettings;
-}
-
-export interface ILobbySettings {
-	maxDistance: number;
 }

@@ -35,8 +35,8 @@ function createMainWindow() {
 		webPreferences: {
 			nodeIntegration: true,
 			enableRemoteModule: true,
-			webSecurity: false,
-		},
+			webSecurity: false
+		}
 	});
 
 	mainWindowState.manage(window);
@@ -46,20 +46,17 @@ function createMainWindow() {
 	}
 
 	if (isDevelopment) {
-		window.loadURL(
-			`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=${autoUpdater.currentVersion.version}`
-		);
-	} else {
-		window.loadURL(
-			formatUrl({
-				pathname: joinPath(__dirname, 'index.html'),
-				protocol: 'file',
-				query: {
-					version: autoUpdater.currentVersion.version,
-				},
-				slashes: true,
-			})
-		);
+		window.loadURL(`http://localhost:${process.env.ELECTRON_WEBPACK_WDS_PORT}?version=${autoUpdater.currentVersion.version}`);
+	}
+	else {
+		window.loadURL(formatUrl({
+			pathname: joinPath(__dirname, 'index.html'),
+			protocol: 'file',
+			query: {
+				version: autoUpdater.currentVersion.version
+			},
+			slashes: true
+		}));
 	}
 
 	window.on('closed', () => {
@@ -88,6 +85,7 @@ if (!gotTheLock) {
 			mainWindow.focus();
 		}
 	});
+
 
 	// quit application when all windows are closed
 	app.on('window-all-closed', () => {
