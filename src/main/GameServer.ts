@@ -89,19 +89,19 @@ class GameProxy {
         if (this?.gameState?.game?.clients == null) return null;
         const v = {
             players: Array.from(this.gameState.game.clients.values(), (z: PlayerClient) => {
-                if (!z || !z.Player) return null;
+                if (!z || !z.Player || !z.Player.PlayerControl || !z.PlayerData) return null;
                 const {x, y} = z.Player.CustomNetworkTransform.position;
                 return {
                     ptr: 0,
                     id: z.Player.PlayerControl.playerId,
-                    name: z.name ?? '???', 
-                    colorId: z.PlayerData?.color ?? 0,
-                    hatId: z.PlayerData?.hat ?? 0,
-                    petId: z.PlayerData?.pet ?? 0,
-                    skinId: z.PlayerData?.skin ?? 0,
-                    disconnected: z.PlayerData?.disconnected ?? false,
-                    isImpostor: z.PlayerData?.impostor ?? false,
-                    isDead: z.PlayerData?.dead ?? false,
+                    name: z.name, 
+                    colorId: z.PlayerData.colour,
+                    hatId: z.PlayerData.hat,
+                    petId: z.PlayerData.pet,
+                    skinId: z.PlayerData.skin,
+                    disconnected: z.PlayerData.disconnected,
+                    isImpostor: z.PlayerData.impostor,
+                    isDead: z.PlayerData.dead,
                     taskPtr: 0,
                     objectPtr: 0,
                     inVent: this.gameState.vented.has(z.id) && this.gameState.vented.get(z.id),
