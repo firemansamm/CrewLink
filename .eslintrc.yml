@@ -21,9 +21,10 @@ settings:
   react:
     version: 'detect'
 rules:
-  linebreak-style:
+  no-case-declarations: off
+  quotes:
     - error
-    - unix
-  'prettier/prettier':
+    - single
+  semi:
     - error
   '@typescript-eslint/ban-ts-comment': off

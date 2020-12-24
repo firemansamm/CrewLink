@@ -1,0 +1,33 @@
+matrix:
+  include:
+    - os: osx
+      osx_image: xcode10.2
+      language: node_js
+      node_js: "10"
+      env:
+        - ELECTRON_CACHE=$HOME/.cache/electron
+        - ELECTRON_BUILDER_CACHE=$HOME/.cache/electron-builder
+        - TSC_COMPILE_ON_ERROR=true
+
+    - os: linux
+      language: node_js
+      node_js: "10"
+
+secure: "aKnJ+t8laK5/a5F0HAS7KzQO66D065sl51Lu8fafVhdgc3ArsGg65Igp576TLwoPprVGssr4aBeJkSTX8ZCRG91fNwVng1PE9wCG3CXng/dYhf5N7ZtfyzhBKef2tEq+nw+lfyums/p7QODsfwGQM2RfLN3op/E3c3HgOhG0hNo="
+secure: "RUnmht6iaNKqB4PtFt0wNXHE7JzuC39xhJGw0lve/7vPbA4L8ZHFHnbpb5Q+lwRwGZqohngiYR1AnXZlOsesJmkU5CctW8SCkkMpNQXZe5X6WmFbtMhP13vwI1a1f+l62Lp1snui+XCnD2ZnRDtTx5TAMkMIp3Dkmj6IW4dqGOg="
+
+cache:
+  directories:
+    - node_modules
+    - $HOME/.cache/electron
+    - $HOME/.cache/electron-builder
+
+script:
+  - |
+    if [ "$TRAVIS_OS_NAME" == "linux" ]; then
+      npm run dist-linux
+    else
+      npm run dist-mac
+    fi
+before_cache:
+  - rm -rf $HOME/.cache/electron-builder/wine

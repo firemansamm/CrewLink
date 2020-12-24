@@ -64,6 +64,7 @@ function createMainWindow() {
 
 	window.on('closed', () => {
 		mainWindow = null;
+		app.quit();
 	});
 
 	window.webContents.on('devtools-opened', () => {

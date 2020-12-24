@@ -5,6 +5,7 @@ import React, {
 	useReducer,
 	useState,
 } from 'react';
+import { ImpulseSpinner as Spinner } from 'react-spinners-kit';
 import ReactDOM from 'react-dom';
 import Voice from './Voice';
 import Menu from './Menu';
@@ -25,6 +26,7 @@ import SettingsIcon from '@material-ui/icons/Settings';
 import CloseIcon from '@material-ui/icons/Close';
 import IconButton from '@material-ui/core/IconButton';
 import makeStyles from '@material-ui/core/styles/makeStyles';
+import { CircularProgress } from '@material-ui/core';
 
 let appVersion = '';
 if (typeof window !== 'undefined' && window.location) {
@@ -94,6 +96,7 @@ const TitleBar: React.FC<TitleBarProps> = function ({
 enum AppState {
 	MENU,
 	VOICE,
+	WAITING
 }
 
 function App() {
@@ -119,8 +122,10 @@ function App() {
 	const lobbySettings = useReducer(lobbySettingsReducer, settings[0].localLobbySettings);
 
 	useEffect(() => {
-		const onOpen = (_: Electron.IpcRendererEvent, isOpen: boolean) => {
-			setState(isOpen ? AppState.VOICE : AppState.MENU);
+		const onOpen = (_: Electron.IpcRendererEvent, state: number) => {
+			if (state == 0) setState(AppState.MENU);
+			else if (state == 1) setState(AppState.WAITING);
+			else if (state == 2) setState(AppState.VOICE);
 		};
 		const onState = (_: Electron.IpcRendererEvent, newState: AmongUsState) => {
 			setGameState(newState);
@@ -145,12 +150,20 @@ function App() {
 
 	let page;
 	switch (state) {
-		case AppState.MENU:
-			page = <Menu error={error} />;
-			break;
-		case AppState.VOICE:
-			page = <Voice error={error} />;
-			break;
+	case AppState.MENU:
+		page = <Menu error={error} />;
+		break;
+	case AppState.WAITING:
+		page = <><div className="root">
+			<div className="menu">
+				<span className="waiting">Waiting for game...</span>
+				<CircularProgress color="primary" size={40} />
+			</div>
+		</div></>;
+		break;
+	case AppState.VOICE:
+		page = <Voice error={error} />;
+		break;
 	}
 	return (
 		<GameStateContext.Provider value={gameState}>
