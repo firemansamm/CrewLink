@@ -82,11 +82,7 @@
       "ia32"
     ]
   },
-  "publish": [
-    {
-      "provider": "github",
-      "owner": "firemansamm",
-      "repo": "CrewLink"
-    }
-  ]
+  "build":{
+    "publish": [ "github" ]
+  }
 }
