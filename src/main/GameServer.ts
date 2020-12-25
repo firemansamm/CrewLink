@@ -1,6 +1,7 @@
 import dgram, { RemoteInfo, Socket } from 'dgram';
 import { parsePacket, composePacket, PayloadID, Code2Int, PlayerClient } from 'amongus-protocol/js';
 import GameStateProcessor from './GameStateProcessor';
+import os from 'os';
 
 import type { Packet, Payload } from 'amongus-protocol/ts/lib/interfaces/Packets';
 
@@ -26,6 +27,7 @@ class GameProxy {
     playerMap = {};
     playerReverseMap = {};
     clientid = 0;
+    hostid = 0;
     gameState = new GameStateProcessor();
     players = {};
     gameCode = 0;
@@ -65,6 +67,8 @@ class GameProxy {
             const joined = recp.payloads.filter((x: Payload) => x.payloadid == PayloadID.JoinedGame)[0];
             // @ts-ignore too lazy to deal with this
             this.clientid = joined.clientid;
+            // @ts-ignore too lazy to deal with this
+            this.hostid = joined.hostid;
             this.gameState.processPacket(recp);
         } else if (recp.payloads.filter(x => x.payloadid == PayloadID.Redirect).length != 0
                 && this.cachedHello &&  this.cachedJoin) {
@@ -111,8 +115,11 @@ class GameProxy {
             }).filter(x => x != null),
             vents: this.gameState.vented,
             localclientid: this.clientid,
-            meeting: this.gameState.game?.MeetingHub?.MeetingHud != null
+            meeting: this.gameState.game?.MeetingHub?.MeetingHud != null,
+            hostid: this.hostid,
+            ishost: this.clientid == this.hostid
         };
+        // @ts-ignore no
         if (v.players.find(x => x.isLocal) == null) return null; //UGLY
         else return v;
     }
@@ -145,13 +152,26 @@ export default class ProxyServer {
     name = '';
     code = '';
     server: [string, number] = ['', 0];
-    boundIP = '';
+    broadcastAddressses: string[] = [];
 
-    constructor(name: string, code: string, server: [string, number], boundIP: string) {
+    constructor(name: string, code: string, server: [string, number]) {
         this.name = name;
         this.code = code;
         this.server = server;
-        this.boundIP = boundIP;
+
+        Object.values(os.networkInterfaces()).forEach((x) => {
+            x.forEach(y => {
+                if (y.address.indexOf(':') !== -1) return; // ignore IPv6
+                else {
+                    const v = y.address.split('.').map(x => parseInt(x)); // [192, 168, 0, 1]
+                    const m = y.netmask.split('.').map(x => parseInt(x)); // [255, 255, 255, 0];
+                    const k = m.map(x => 255 - x);
+                    const n = v.map((x, i) => x & m[i]);
+                    const bcast = n.map((x, i) => x + k[i]);
+                    this.broadcastAddressses.push(bcast.join('.'));
+                }
+            });
+        });
     }
 
     update() {
@@ -178,7 +198,7 @@ export default class ProxyServer {
 
         const bSock = dgram.createSocket('udp4');
 
-        bSock.bind(0, this.boundIP, () => {
+        bSock.bind(() => {
             bSock.setBroadcast(true);
             const msg = Buffer.from(
                 `0402${stringToHex(this.name)}7e4f70656e7e${stringToHex('?')}7e`,
@@ -186,7 +206,9 @@ export default class ProxyServer {
             );
             
             setInterval(() => {
-                if (!this.activeProxy) bSock.send(msg, 47777, '255.255.255.255'); 
+                if (!this.activeProxy) {
+                    this.broadcastAddressses.forEach(x => bSock.send(msg, 47777, x)); 
+                }
             }, BROADCAST_INTERVAL_MSEC);
         });
     }

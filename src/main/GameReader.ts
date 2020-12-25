@@ -1,5 +1,5 @@
 import patcher from '../patcher';
-import { GameState, AmongUsState } from '../common/AmongUsState';
+import { GameState, AmongUsState, Player } from '../common/AmongUsState';
 import { MasterServers } from 'amongus-protocol/js';
 import ProxyServer from './GameServer';
 
@@ -32,7 +32,10 @@ export default class GameReader {
 			lobbyCode: this.gameCode,
 			players,
 			gameState: state,
-			oldGameState: this.oldGameState
+			oldGameState: this.oldGameState,
+			clientId: gameState.localclientid,
+			hostId: gameState.hostid,
+			isHost: gameState.ishost
 		};
 		const patch = patcher.diff(this.lastState, newState);
 		if (patch) {
@@ -46,12 +49,13 @@ export default class GameReader {
 		if (this.lastState.gameState == null && gameState != null) {
 			this.reply('gameOpen', 2);
 		}
-
+		
+		// @ts-ignore there are no nulls here
 		this.lastState = newState;
 		this.oldGameState = state;
 	}
 
-	constructor(reply: (event: string, ...args: unknown[]) => void, code: string, region: string, boundIP: string) {
+	constructor(reply: (event: string, ...args: unknown[]) => void, code: string, region: string) {
 		this.reply = reply;
 		
 		this.reply('gameOpen', 1);
@@ -62,7 +66,7 @@ export default class GameReader {
 		else server = MasterServers.EU[0].slice();
 
 		//@ts-ignore go away i know what i'm doing
-		this.gameServer = new ProxyServer(this.gameCode, this.gameCode, server, boundIP);
+		this.gameServer = new ProxyServer(this.gameCode, this.gameCode, server);
 		this.gameServer.start();
 	}
 }

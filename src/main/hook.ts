@@ -39,8 +39,8 @@ ipcMain.on('start', async (event) => {
 
 	iohook.start();
 
-	ipcMain.on('enterCode', (evt, code, region, boundIP) => {
-		gameReader = new GameReader(evt.reply as (evt: string, ...args: unknown[]) => void, code, region, boundIP);
+	ipcMain.on('enterCode', (evt, code, region) => {
+		gameReader = new GameReader(evt.reply as (evt: string, ...args: unknown[]) => void, code, region);
 		const frame = () => {
 			gameReader.loop();
 		};

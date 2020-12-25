@@ -158,17 +158,17 @@ const Voice: React.FC = function () {
 			deviceId: undefined as unknown as string,
 			autoGainControl: false,
 			channelCount: 2,
-			echoCancellation: false,
+			echoCancellation: true,
 			latency: 0,
-			noiseSuppression: false,
+			noiseSuppression: true,
 			sampleRate: 48000,
 			sampleSize: 16,
-			googEchoCancellation: false,
+			googEchoCancellation: true,
 			googAutoGainControl: false,
 			googAutoGainControl2: false,
-			googNoiseSuppression: false,
+			googNoiseSuppression: true,
 			googHighpassFilter: false,
-			googTypingNoiseDetection: false
+			googTypingNoiseDetection: true
 		};
 
 		// Get microphone settings
